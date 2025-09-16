@@ -37,7 +37,6 @@ export default function Home() {
           });
           toolOutput = await response.json();
         } catch (error) {
-          console.error('Error executing browseTool:', error);
           toolOutput = { error: 'Failed to connect to browsing service' };
         }
       } else if (typedToolCall.toolName === 'generateComponentTool') {
@@ -49,7 +48,6 @@ export default function Home() {
           });
           toolOutput = await response.json();
         } catch (error) {
-          console.error('Error executing generateComponentTool:', error);
           toolOutput = { error: 'Failed to connect to component generation service' };
         }
       } else {
@@ -87,8 +85,12 @@ export default function Home() {
                     <strong>AI: </strong>{m.content}
                   </Text>
                 
-                  {localToolResults
-                    .filter(localToolResult => localToolResult.toolCallId === m.id)
+                  {m.toolInvocations && m.toolInvocations.length > 0 &&
+                    localToolResults
+                    .filter(localToolResult => {
+                      if (!m.toolInvocations) return false; // Type guard
+                      return m.toolInvocations.some(toolInvocation => 'id' in toolInvocation && toolInvocation.id === localToolResult.toolCallId)
+                    })
                     .map((localToolResult, toolIndex) => (
                       <Box key={toolIndex} mt={2} p={2} bg="gray.100" borderRadius="md">
                         {localToolResult.toolName === 'browseTool' && (
