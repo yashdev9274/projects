@@ -23,6 +23,9 @@ export async function POST(req: NextRequest) {
 
   const { messages } = await req.json();
 
+  console.log('Incoming request body:', { messages }); // Added logging
+  console.log('Incoming request headers:', req.headers); // Added logging
+
   if (!messages || !Array.isArray(messages) || messages.length === 0) {
     return NextResponse.json({ error: 'Missing or empty messages in request body' }, { status: 400 });
   }
@@ -31,6 +34,9 @@ export async function POST(req: NextRequest) {
 
   const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_API_KEY });
   const model = google('models/gemini-1.5-flash-latest') as any;
+
+  // Add a system message to instruct the AI to always provide a textual response after a tool call
+  messages.push({ role: 'system', content: 'When you use a tool, always provide a brief textual summary of what the tool did or what you found, in addition to the tool call itself. You can also generate React components with Chakra UI from API documentation. To do this, provide the API documentation to the `generateComponent` tool.' });
 
   const result = await streamText({
     model,

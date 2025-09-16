@@ -26,6 +26,7 @@ export default function Home() {
     api: '/api/chat',
     onToolCall: async ({ toolCall }: { toolCall: any }) => {
       const typedToolCall = toolCall as AisdkToolCall;
+
       let toolOutput: any;
       if (typedToolCall.toolName === 'browseTool') {
         try {
@@ -71,7 +72,8 @@ export default function Home() {
       <VStack spacing={4} align="stretch">
         <Heading as="h1" size="xl" textAlign="center">AI Chat Interface</Heading>
         <Box border="1px" borderColor="gray.200" p={4} borderRadius="md" minH="400px" overflowY="auto">
-          {messages.map((m) => (
+          {messages.map((m) => {
+            return (
             <Box key={m.id}>
               {m.role === 'user' && (
                 <Box mt={2} p={2} bg='blue.50' borderRadius="md">
@@ -84,6 +86,7 @@ export default function Home() {
                   <Text color='green.500' whiteSpace="pre-wrap">
                     <strong>AI: </strong>{m.content}
                   </Text>
+                
                   {localToolResults
                     .filter(localToolResult => localToolResult.toolCallId === m.id)
                     .map((localToolResult, toolIndex) => (
@@ -115,7 +118,8 @@ export default function Home() {
                 </Box>
               )}
             </Box>
-          ))}
+            );
+          })}
           {isLoading && (
             <HStack justifyContent="center" mt={4}>
               <Spinner size="sm" />
