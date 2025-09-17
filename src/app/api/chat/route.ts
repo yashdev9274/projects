@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
   const model = google('models/gemini-1.5-flash-latest') as any;
 
   // Add a system message to instruct the AI to always provide a textual response after a tool call
-  messages.push({ role: 'system', content: 'When you use a tool, always provide a brief textual summary of what the tool did or what you found, in addition to the tool call itself. You can also generate React components with Chakra UI from API documentation. To do this, provide the API documentation to the `generateComponent` tool.' });
+  messages.push({ role: 'system', content: 'YOU MUST use the `generateComponent` tool when the user asks to generate a React component. The `apiDocs` parameter for the `generateComponent` tool MUST be the URL of the API documentation provided by the user.' });
 
   const result = await streamText({
     model,
@@ -97,6 +97,11 @@ export async function POST(req: NextRequest) {
     },
   });
 
+  // Await the promises to ensure they are resolved before returning
+  await result.toolCalls;
+  await result.text;
+
+  console.log('StreamText result after awaiting:', { toolCalls: await result.toolCalls, text: await result.text }); // Added for debugging
   return result.toTextStreamResponse();
 }
 

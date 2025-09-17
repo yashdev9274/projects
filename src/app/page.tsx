@@ -24,11 +24,14 @@ export default function Home() {
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, addToolResult } = useChat({
     api: '/api/chat',
+    // Moved onToolCall here
     onToolCall: async ({ toolCall }: { toolCall: any }) => {
       const typedToolCall = toolCall as AisdkToolCall;
 
+      console.log('Tool call received:', typedToolCall.toolName);
       let toolOutput: any;
-      if (typedToolCall.toolName === 'browseTool') {
+
+      if (typedToolCall.toolName === 'browse') {
         try {
           const response = await fetch('/api/browse', {
             method: 'POST',
@@ -39,7 +42,7 @@ export default function Home() {
         } catch (error) {
           toolOutput = { error: 'Failed to connect to browsing service' };
         }
-      } else if (typedToolCall.toolName === 'generateComponentTool') {
+      } else if (typedToolCall.toolName === 'generateComponent') {
         try {
           const response = await fetch('/api/generate-component', {
             method: 'POST',
@@ -54,6 +57,7 @@ export default function Home() {
         toolOutput = { error: `Unknown tool: ${typedToolCall.toolName}` };
       }
 
+      console.log('Tool output for generateComponentTool:', toolOutput); // Debugging line
       addToolResult({ toolCallId: typedToolCall.id, result: toolOutput });
 
       setLocalToolResults(prev => [...prev, {
@@ -64,6 +68,8 @@ export default function Home() {
       }]);
     },
   });
+
+  console.log('Current messages:', messages); // Added for debugging entire messages array
 
   return (
     <Box p={4}>
@@ -104,14 +110,18 @@ export default function Home() {
                             )}
                           </Box>
                         )}
-                        {localToolResult.toolName === 'generateComponentTool' && (
+                        {localToolResult.toolName === 'generateComponent' && (
                           <Box>
                             <Text fontSize="sm" color="gray.600">Generating Component...</Text>
                             {localToolResult.output.error && <Text color="red.500">Error: {localToolResult.output.error}</Text>}
                             {localToolResult.output.componentCode && (
-                              <SyntaxHighlighter language="typescript" style={vs2015} customStyle={{ marginTop: '8px' }}>
-                                {localToolResult.output.componentCode}
-                              </SyntaxHighlighter>
+                              <>
+                                <Text>Component Code Received (for debugging):</Text>
+                                <pre>{JSON.stringify(localToolResult.output.componentCode, null, 2)}</pre>
+                                <SyntaxHighlighter language="typescript" style={vs2015} customStyle={{ marginTop: '8px' }}>
+                                  {localToolResult.output.componentCode}
+                                </SyntaxHighlighter>
+                              </>
                             )}
                           </Box>
                         )}
