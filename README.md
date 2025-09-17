@@ -1,4 +1,4 @@
-# AI Chat Interface with Browsing & Component Generation
+# AI Chat App
 
 This project creates an AI-powered chat interface using `@ai-sdk/react` that enables real-time interactions, integrates a browsing tool, and generates React component code snippets from API documentation pages.
 
@@ -68,22 +68,3 @@ Follow these steps to set up and run the project locally:
     ```
 
     Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
-
-## Example Usage
-
-Once the application is running, you can interact with the AI in the chat interface. Here are some example prompts:
-
--   "Summarize the content of this page: [https://nextjs.org/docs/getting-started](https://nextjs.org/docs/getting-started)"
--   "Generate a React component for a user profile card based on an API that returns `firstName`, `lastName`, `email`, and `avatarUrl`. Use Chakra UI."
-
-## Chosen UI Library: Chakra UI
-
-Chakra UI was chosen for its comprehensive set of accessible and composable React components. It provides a great developer experience with its style props system and dark mode compatibility out of the box. It integrates well with Tailwind CSS, allowing for a flexible and efficient styling approach.
-
-## Notes on Tools, Workflows, and Trade-offs
-
--   **AI SDK Integration**: The `@ai-sdk/react` and `@ai-sdk/google` libraries were instrumental in quickly setting up streaming chat responses and integrating custom tools (browsing and component generation).
--   **Tooling**: The browsing tool utilizes `cheerio` for efficient server-side HTML parsing and text extraction, which is crucial for summarizing web content.
--   **Component Generation**: The component generation tool leverages the LLM's capabilities to interpret API documentation and produce structured, typed React components with usage examples. This significantly speeds up front-end development.
--   **Styling**: The combination of Tailwind CSS for utility-first styling and Chakra UI for robust, accessible components offers a powerful and flexible styling solution. Tailwind handles low-level styling, while Chakra provides higher-level UI abstractions.
--   **Trade-offs**: While the component generation tool is powerful, it relies on the quality and clarity of the provided API documentation. Ambiguous or poorly structured documentation may lead to less accurate or incomplete component generation. Client-side prop validation could be further enhanced with libraries like `zod` or `yup` for more robust error handling.
