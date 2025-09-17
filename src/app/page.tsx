@@ -57,7 +57,7 @@ export default function Home() {
         toolOutput = { error: `Unknown tool: ${typedToolCall.toolName}` };
       }
 
-      console.log('Tool output for generateComponentTool:', toolOutput); // Debugging line
+      console.log('Tool output for generateComponentTool:', toolOutput); 
       addToolResult({ toolCallId: typedToolCall.id, result: toolOutput });
 
       setLocalToolResults(prev => [...prev, {
@@ -69,7 +69,7 @@ export default function Home() {
     },
   });
 
-  console.log('Current messages:', messages); // Added for debugging entire messages array
+  console.log('Current messages:', messages); 
 
   return (
     <Box p={4}>
@@ -94,7 +94,7 @@ export default function Home() {
                   {m.toolInvocations && m.toolInvocations.length > 0 &&
                     localToolResults
                     .filter(localToolResult => {
-                      if (!m.toolInvocations) return false; // Type guard
+                      if (!m.toolInvocations) return false; 
                       return m.toolInvocations.some(toolInvocation => 'id' in toolInvocation && toolInvocation.id === localToolResult.toolCallId)
                     })
                     .map((localToolResult, toolIndex) => (

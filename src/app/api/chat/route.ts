@@ -23,19 +23,18 @@ export async function POST(req: NextRequest) {
 
   const { messages } = await req.json();
 
-  console.log('Incoming request body:', { messages }); // Added logging
-  console.log('Incoming request headers:', req.headers); // Added logging
+  console.log('Incoming request body:', { messages }); 
+  console.log('Incoming request headers:', req.headers); 
 
   if (!messages || !Array.isArray(messages) || messages.length === 0) {
     return NextResponse.json({ error: 'Missing or empty messages in request body' }, { status: 400 });
   }
 
-  console.log('Messages before streamText:', messages); // Added for debugging
+  console.log('Messages before streamText:', messages);
 
   const google = createGoogleGenerativeAI({ apiKey: process.env.GOOGLE_API_KEY });
   const model = google('models/gemini-1.5-flash-latest') as any;
 
-  // Add a system message to instruct the AI to always provide a textual response after a tool call
   messages.push({ role: 'system', content: 'YOU MUST use the `generateComponent` tool when the user asks to generate a React component. The `apiDocs` parameter for the `generateComponent` tool MUST be the URL of the API documentation provided by the user.' });
 
   const result = await streamText({
@@ -97,7 +96,6 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  // Await the promises to ensure they are resolved before returning
   await result.toolCalls;
   await result.text;
 
